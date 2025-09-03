@@ -1,0 +1,83 @@
+#include "pch.h"
+#include <iostream>
+#include <conio.h> //kbhit y getch
+#include <string.h>
+#include <Windows.h> //Sleep
+
+using namespace System;
+using namespace std;
+
+struct Personaje
+{
+    int x, y;
+    string cabeza;
+    string cuerpo;
+    string pies;
+};
+
+void crearPersonajeV1(Personaje* pj, string c, string cu, string p, int x, int y) {
+    pj->cabeza = c;
+    pj->cuerpo = cu;
+    pj->pies = p;
+    pj->x = x;
+    pj->y = y;
+}
+
+Personaje* crearPersonajeV2(string c, string cu, string p, int x, int y) {
+    Personaje* pj = new Personaje;
+    pj->cabeza = c;
+    pj->cuerpo = cu;
+    pj->pies = p;
+    pj->x = x;
+    pj->y = y;
+    return pj;
+}
+
+
+void dibujar(Personaje* pj) {
+    Console::SetCursorPosition(pj->x, pj->y); cout << pj->cabeza;
+    Console::SetCursorPosition(pj->x, pj->y+1); cout << pj->cuerpo;
+    Console::SetCursorPosition(pj->x, pj->y+2); cout << pj->pies;
+}
+
+void borrar(Personaje* pj) {
+    Console::SetCursorPosition(pj->x, pj->y); cout << "    ";
+    Console::SetCursorPosition(pj->x, pj->y + 1); cout << "    ";
+    Console::SetCursorPosition(pj->x, pj->y + 2); cout << "    ";
+}
+
+void mover(Personaje* pj, char tecla) {    
+    if (tecla == 'w') pj->y--;//arriba
+    if (tecla == 's') pj->y++;//abajo
+    if (tecla == 'a') pj->x--;//izquierda
+    if (tecla == 'd') pj->x++;//derecha
+}
+
+
+int main()
+{
+    Console::SetWindowSize(100, 30);
+    Personaje* pj = nullptr;// = new Personaje;
+
+    //crearPersonajeV1(pj, " o ", "/|\\", "/ \\", 10, 5);
+
+    pj = crearPersonajeV2(" o ", "/|\\", "/ \\", 10, 5);
+
+    dibujar(pj);
+
+    //cout << " El persoja debes controlarlo con las tecla w(arriba), s(abajo), a(izquierda), d (derecha)" << endl;
+
+    while (true) {
+        if (_kbhit()) {
+            char tecla = _getch();
+            if (tecla == 'w' || tecla == 's' || tecla == 'a' || tecla == 'd') {
+                borrar(pj);
+                mover(pj, tecla);
+                dibujar(pj);
+            }
+        }
+    }
+    delete pj;
+    system("pause>0");
+    return 0;
+}

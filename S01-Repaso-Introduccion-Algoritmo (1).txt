@@ -1,0 +1,96 @@
+Configuración de#include "pch.h"
+#include <iostream>
+#include <ctime>
+
+using namespace System;
+using namespace std;
+
+const int MAX = 100;
+
+struct Bala {
+    int x, y;
+};
+
+struct Personaje {
+    float velocidad;
+    int vidas;
+    int poder;
+    int x, y;
+    Bala* balas = new Bala[50];
+};
+
+
+
+//promedio y suma son parametros por referencia utilizando operador de indireccion(*)
+void calcularPromedio(int numeroUno, int numeroDos, double& promedio, int* suma) {
+    *suma = (numeroUno + numeroDos) ;
+    promedio = *suma / 2;
+}
+
+void buscarDatosAreglo(int*& numeros, int tam, int** matriz) {
+
+}
+
+int* crearArreglo(int tam) {
+    int* numeros = new int[10];
+    return numeros;
+}
+
+Personaje* crearPersonajes(int numeroPersonajes) {
+    Personaje* personajes = new Personaje[numeroPersonajes];
+    return personajes;
+}
+
+int** crearMundo(int filas, int columnas) {
+    int** mundo = new int*[filas];
+    for (int i = 0; i < filas; i++)
+    {
+        mundo[i] = new int[columnas];
+    }
+    return mundo;
+}
+
+
+int main()
+{
+    int edad = 44;
+    int* ptrEdad = &edad;
+
+    int* numero = new int(12);//reserva de memoria dinamica
+    //*numero = 12;
+    cout << "Valor del numero:" << *numero << endl;
+    cout << "Direccion Memo numero:" << numero << endl;
+    delete numero;
+
+    int* suma = new int(23);
+    double promedio;
+    calcularPromedio(12, 34,promedio, suma);
+
+
+    system("pause>0");
+    return 0;
+}
+ SC: Trusted Installer. inicio=auto
+bits de parada de red
+parada de red wuauserv
+parada de red msiserver
+parada de red cryptsvc
+parada de red appidsvc
+Ren %Systemroot%\SoftwareDistribution SoftwareDistribution.old
+Ren %Systemroot%\System32\catroot2 catroot2.old
+regsvr32.exe /s atl.dll
+regsvr32.exe /s urlmon.dll
+regsvr32.exe /s mshtml.dll
+reinicio de netsh winsock
+reinicio de netsh winsock proxy
+rundll32.exe pnpclean.dll,RunDLL_PnpClean /DRIVERS /MAXCLEAN
+dism /Online /Imagen de limpieza /ScanHealth
+dism /Online /Imagen de limpieza /CheckHealth
+dism /Online /Imagen de limpieza /RestoreHealth
+dism /Online /Imagen de limpieza /StartComponentCleanup
+Sfc /ScanNow
+bits de inicio de red
+inicio de red wuauserv
+net start msiserver
+net start cryptsvc
+net start appidsvc
