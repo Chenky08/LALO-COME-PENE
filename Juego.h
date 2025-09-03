@@ -1,60 +1,74 @@
 #pragma once
-#include<vector>
-using namespace std;
-#include "Globo.h"
+
+#include "Tanque.h"
+#include "Ladrillo.h"
+#include "Enemigo.h"
 class Juego
 {
 public:
-	Juego(){
-		srand(time(0));
-		timer = 0;
-		vidas = 10;
-		puntos = 0;
+	Juego(int t,int l) {
+		tanque = new Tanque();
+		int i = 0;
+		while (i < t) {
+			enemigos.push_back(new Enemigo());
+			i++;
+		}
+		i = 0;
+		while (i < l) {
+			ladrillos.push_back(new Ladrillo());
+			i++;
+		}
 	}
 	~Juego(){}
-	void dibujar(Graphics^g) {
-		for (int i = 0; i < globos.size(); i++) {
-			globos[i]->dibujar(g);
+	void dibujar(Graphics^g,Bitmap^imgTanque,Bitmap^imgEnemigo,Bitmap^imgLadrillo) {
+		tanque->dibujar(g,imgTanque);
+		for (int i = 0; i < enemigos.size(); i++) {
+			enemigos[i]->dibujar(g, imgEnemigo);
+		}
+		for (int i = 0; i < ladrillos.size(); i++) {
+			ladrillos[i]->dibujar(g, imgLadrillo);
 		}
 	}
-	void mover() {
-		for (int i = 0; i < globos.size(); i++) {
-			globos[i]->mover();
+	void mover(Graphics^ g) {
+		tanque->mover(g);
+		for (int i = 0; i < enemigos.size(); i++) {
+			enemigos[i]->mover(g);
 		}
 	}
-	void agregar() {
-		if (timer >= 60) {
-			globos.push_back(new Globo());
-			timer = 0;
+	void verificarColisionLadrillos() {
+		for (int i = 0; i < ladrillos.size(); i++) {
+			for (int j = 0; j < enemigos.size(); j++) {
+				ladrillos[i]->verificarColisionBalaEnemigos(enemigos[j]->getBalas());
+			}
 		}
-		timer++;
-	}
-	void obtenerRespuesta(int numero_entrada) {
-		if (globos.size() <= 0) return;
-		if (numero_entrada == globos[0]->getResultado()) {
-			puntos += 5;
-			globos.erase(globos.begin() + 0);
-		}
-	}
-	void iniciar(Graphics^g) {
-		mover();
-		dibujar(g);
-		agregar();
-		verificarGlobos();
-	}
-	void verificarGlobos() {
-		for (int i = 0; i < globos.size(); i++) {
-			if (globos[i]->getY() <= -50) {
-				globos.erase(globos.begin() + i);
-				vidas--;
+		for (int i = 0; i < ladrillos.size(); i++) {
+			if (ladrillos[i]->getEliminado()) {
+				ladrillos.erase(ladrillos.begin() + i);
 			}
 		}
 	}
-	int getPuntos() { return puntos; }
-	int getVidas() { return vidas; }
+	void iniciar(Graphics^g,Bitmap^imgTanque,Bitmap^imgEnemigo,Bitmap^imgLadrillo) {
+		dibujar(g,imgTanque,imgEnemigo,imgLadrillo);
+		mover(g);
+		verificarColisionConEnemigos();
+		verificarColisionLadrillos();
+	}
+	Tanque* getTanque() {
+		return tanque;
+	}
+	void verificarColisionConEnemigos() {
+		for (int i = 0; i < enemigos.size(); i++) {
+			for (int j = 0; j < tanque->getBalas().size(); j++) {
+				if (enemigos[i]->mascara().IntersectsWith(tanque->getBalas()[j]->mascara())) {
+					enemigos.erase(enemigos.begin() + i);
+					tanque->getBalas()[j]->setEliminado(true);
+				}
+			}
+		}
+	}
 private:
-	vector<Globo*>globos;
-	int timer;
-	int vidas;
-	int puntos;
+	Tanque* tanque;
+	vector<Enemigo*>enemigos;
+	vector<Ladrillo*>ladrillos;
 };
+
