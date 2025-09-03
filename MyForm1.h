@@ -1,5 +1,5 @@
 #pragma once
-#include "Juego.h"
+#include "Juego.h"	
 namespace protones {
 
 	using namespace System;
@@ -10,13 +10,14 @@ namespace protones {
 	using namespace System::Drawing;
 
 	/// <summary>
-	/// Resumen de MyForm
+	/// Resumen de MyForm1
 	/// </summary>
-	public ref class MyForm : public System::Windows::Forms::Form
+	public ref class MyForm1 : public System::Windows::Forms::Form
 	{
 	public:
-		MyForm(void)
+		MyForm1(void)
 		{
+			InitializeComponent();
 			juego = new Juego();
 		}
 
@@ -24,19 +25,18 @@ namespace protones {
 		/// <summary>
 		/// Limpiar los recursos que se estén usando.
 		/// </summary>
-		~MyForm()
+		~MyForm1()
 		{
 			if (components)
 			{
 				delete components;
 			}
 		}
-
+	private: System::Windows::Forms::Timer^ timer1;
 	protected:
 	private: System::ComponentModel::IContainer^ components;
-	private: System::Windows::Forms::Label^ label1;
 
-	private: System::Windows::Forms::Timer^ timer2;
+	protected:
 
 	private:
 		Juego* juego;
@@ -50,38 +50,26 @@ namespace protones {
 		void InitializeComponent(void)
 		{
 			this->components = (gcnew System::ComponentModel::Container());
-			this->label1 = (gcnew System::Windows::Forms::Label());
-			this->timer2 = (gcnew System::Windows::Forms::Timer(this->components));
+			this->timer1 = (gcnew System::Windows::Forms::Timer(this->components));
 			this->SuspendLayout();
 			// 
-			// label1
+			// timer1
 			// 
-			this->label1->AutoSize = true;
-			this->label1->Location = System::Drawing::Point(82, 39);
-			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(35, 13);
-			this->label1->TabIndex = 0;
-			this->label1->Text = L"label1";
+			this->timer1->Enabled = true;
+			this->timer1->Tick += gcnew System::EventHandler(this, &MyForm1::timer1_Tick);
 			// 
-			// timer2
-			// 
-			this->timer2->Enabled = true;
-			this->timer2->Tick += gcnew System::EventHandler(this, &MyForm::timer2_Tick);
-			// 
-			// MyForm
+			// MyForm1
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(247, 193);
-			this->Controls->Add(this->label1);
-			this->Name = L"MyForm";
-			this->Text = L"MyForm";
+			this->ClientSize = System::Drawing::Size(284, 261);
+			this->Name = L"MyForm1";
+			this->Text = L"MyForm1";
 			this->ResumeLayout(false);
-			this->PerformLayout();
 
 		}
 #pragma endregion
-	private: System::Void timer2_Tick(System::Object^ sender, System::EventArgs^ e) {
+	private: System::Void timer1_Tick(System::Object^ sender, System::EventArgs^ e) {
 		Graphics^ g = this->CreateGraphics();
 		BufferedGraphicsContext^ bgc = BufferedGraphicsManager::Current;
 		BufferedGraphics^ bg = bgc->Allocate(g, this->ClientRectangle);
