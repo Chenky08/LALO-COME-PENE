@@ -1,0 +1,37 @@
+#pragma once
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+class Personaje
+{	
+protected:
+
+private:
+	string cabeza;
+	string cuerpo;
+	string pies;
+	int x;
+	int y;
+public:
+	
+	Personaje();
+	Personaje(string cabeza, string cuerpo, string pies, int x, int y);
+
+	~Personaje();
+
+	//set:escribir y get: leer/recuperar
+	void setX(int x);
+	void setY(int y);
+
+	int getX();
+	int getY();
+	string getCabeza() {
+		return cabeza;
+	}
+
+	void mostrarInfo() const;
+
+};
+

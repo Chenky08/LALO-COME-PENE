@@ -1,0 +1,51 @@
+#include "pch.h"
+#include "Personaje.h"
+
+Personaje::Personaje() {
+	this->cabeza = " o  ";
+	this->cuerpo = " /|\\  ";
+	this->pies = " /|\\  ";
+	this->x = 10;
+	this->y = 5;
+}
+
+Personaje::Personaje(string cabeza, string cuerpo,
+	string pies, int x, int y) {
+	this->cabeza = cabeza;
+	this->cuerpo = cuerpo;
+	this->pies = pies;
+	this->x = x;
+	this->y = y;
+}
+
+Personaje::~Personaje() {
+
+}
+
+//set:escribir y get: leer/recuperar
+void Personaje::setX(int x){
+	this->x = x;
+}
+
+void Personaje::setY(int y){
+	this->y = y;
+}
+
+	 
+int  Personaje::getX() {
+	return this->x;
+}
+
+int  Personaje::getY() {
+	return this->y;
+}
+
+
+
+void Personaje::mostrarInfo() const{
+	cout << "Cabeza:" << this->cabeza << endl;
+	cout << "Cuerpo:" << this->cuerpo << endl;
+	cout << "Pies:" << this->pies << endl;
+	cout << "X:" << this->x << endl;
+	cout << "Y:" << this->y << endl;
+}

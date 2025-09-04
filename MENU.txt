@@ -1,0 +1,112 @@
+#include "pch.h"
+#include <iostream>
+#include <ctime>
+#include <string>
+#include "Personaje.h"
+
+using namespace std;
+using namespace System;
+
+
+//int x;
+// &x ==> obtiene la direccion de memoria
+
+Personaje* buscar(Personaje* personajes, int n,string craneo) {
+    for (int i = 0; i < n; i++) {
+        if (personajes[i].getCabeza() == craneo) {
+            return &personajes[i];
+        }
+    }
+}
+
+void agregar(Personaje*& personajes, int& n, int& tam, Personaje* personaje) {
+    if (n == tam) {
+        int nuevoTam = (tam == 0) ? 2 : tam * 2;
+        Personaje* copia = new Personaje[nuevoTam];
+        for (int i = 0; i < n; i++)
+        {
+            copia[i] = personajes[i];
+        }
+        
+        delete[] personajes;
+        personajes = copia;
+        tam = nuevoTam;
+    }
+    personajes[n++] = *personaje;
+}
+
+
+void listar( const Personaje* personajes, int n) {    
+    for (int i = 0; i < n; i++)
+    {
+        personajes[i].mostrarInfo();
+    }
+    cout << "=====================" << endl;
+}
+
+Personaje* crearPersonaje() {
+    srand(time(0));
+    string cabezas[] = { "o","?","¡","w" };
+    string cuerpos[] = { "/|\\","/-\\","/?\\","/*\\" };
+    string pies[] = { "/|\\","/-\\","/?\\","/*\\" };
+
+    string cabeza = cabezas[rand() % 4];
+    string cuerpo = cuerpos[rand() % 4];
+    string pie = pies[rand() % 4];
+    int x = rand() % 20;
+    int y = rand() % 10;
+
+    return new Personaje(cabeza, cuerpo, pie, x, y);
+}
+
+void Menu(int n,int tam,Personaje* personajes,Personaje* personaje) {
+    string craneo;
+    int opcion;
+    
+
+    do {
+
+        cout << "***MENU***" << endl;
+        cout << "1. Agregar Personaje" << endl;
+        cout << "2. Buscar personaje por cabeza" << endl;
+        cout << "3. Mostrar cantidad de personajes que existen" << endl;
+        cout << "4. Salir" << endl;
+        cout << "Digite una opcion: "; cin >> opcion;
+
+        switch (opcion) {
+        case 1:
+            personaje = crearPersonaje();
+            agregar(personajes, n, tam, personaje);
+            listar(personajes, n);
+            break;
+        case 2:
+            cout << "Digite la cabeza que desea buscar: "; cin >> craneo;
+            buscar(personajes, n, craneo)->mostrarInfo();
+            break;
+        case 3:
+            break;
+        }
+        system("pause>0");
+    } while (opcion != 4 && opcion > 0);
+}
+
+int main()
+{
+    
+    int n = 0 , tam = 0;
+    Personaje* personajes = nullptr;
+    Personaje* personaje = nullptr;
+
+    //Agregar un menu de opciones
+    //Buscar un persona por cabeza = o==> retorne informacion del personaje
+    //Mostrar la cantidad de personaje que se agrega
+   
+   
+    Menu(n, tam, personajes, personaje);
+
+    delete[] personajes;
+    delete personaje;
+
+    system("pause>0");
+    return 0;
+}
