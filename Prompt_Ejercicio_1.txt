@@ -1,0 +1,87 @@
+Genera un diagrama de clases UML para el caso: Préstamo de Tablets en la Universidad.
+Clases incluidas:
+Estudiante
+
+
+Atributos: codigoEstudiante, nombre
+
+
+Métodos: getters y setters
+
+
+Tablet
+
+
+Atributos: modelo, estado
+
+
+Métodos: getters y setters
+
+
+Prestamo
+
+
+Atributos: fechaInicio, fechaFin, estado
+
+
+Métodos: getters y setters
+
+
+Asociación: referencia a Estudiante y a Tablet
+
+
+ArregloDinamico<T> (clase genérica de apoyo)
+
+
+Atributos: arreglo, n, tam
+
+
+Métodos: agregar(), listar(), buscar(), eliminar(), actualizar(), size(), operator[]
+
+
+ServicioPrestamoTablets
+
+
+Atributos: ArregloDinamico<Estudiante> estudiantes, ArregloDinamico<Tablet> tablets, ArregloDinamico<Prestamo> prestamos
+
+
+Métodos: registrarEstudiante(), registrarTablet(), registrarPrestamo(), registrarDevolucionPorCodigoEstudiante(), listarPrestamosPorEstudiante()
+
+
+Asociaciones:
+Un Estudiante puede tener 0..** Préstamos.
+
+
+Una Tablet puede tener 0..** Préstamos (máximo 1 en uso simultáneamente).
+
+
+Un Préstamo siempre se asocia a exactamente 1 Estudiante y 1 Tablet.
+
+
+ServicioPrestamoTablets gestiona las colecciones de Estudiante, Tablet y Prestamo.
+
+
+ServicioPrestamoTablets depende de la clase genérica ArregloDinamico<T> para manejar listas dinámicas.
+
+
+Cardinalidades:
+Estudiante "1" ---- "0..*" Prestamo
+
+
+Tablet "1" ---- "0..*" Prestamo
+
+
+ServicioPrestamoTablets "1" ---- "0..*" Estudiante
+
+
+ServicioPrestamoTablets "1" ---- "0..*" Tablet
+
+
+ServicioPrestamoTablets "1" ---- "0..*" Prestamo
+
+
+ServicioPrestamoTablets ..> ArregloDinamico<T> (dependencia)
+
+
+
+

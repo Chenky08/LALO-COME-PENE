@@ -1,0 +1,31 @@
+Genera un diagrama de clases UML para el caso: Juego de Héroe con Vitaminas y Obstáculos.
+
+Clases incluidas:
+
+- Heroe:
+  atributos: cabeza, cuerpo, pies, x, y, direccion
+  métodos: mover(), dibujar(), borrar(), getters y setters
+
+- Vitamina:
+  atributos: x, y, direccion, estado, avatar, heroe (referencia al héroe que la lanzó)
+  métodos: mover(), dibujar(), borrar(), getters y setters
+
+- Obstaculo:
+  atributos: x, y, estado, avatar
+  métodos: mover(), dibujar(), borrar(), getters y setters
+
+- Juego:
+  atributos: heroe, vitaminas[], obstaculos[], nVit, nObs, puntaje, meta
+  métodos: iniciarHeroe(), lanzarVitamina(), moverVitaminas(), generarObstaculo(), moverObstaculos(), detectarColisiones(), mostrarEstado(), juegoTerminado()
+
+Asociaciones:
+- Un Heroe puede lanzar 0..* Vitaminas.
+- Una Vitamina está asociada a exactamente 1 Heroe.
+- El Juego tiene 1 Heroe, 0..* Vitaminas y 0..* Obstaculos.
+- Los Obstaculos no tienen asociación directa con el Heroe, pero interactúan en colisiones con las Vitaminas.
+
+Cardinalidades:
+- Heroe "1" ---- "0..*" Vitamina
+- Juego "1" ---- "1" Heroe
+- Juego "1" ---- "0..*" Vitamina
+- Juego "1" ---- "0..*" Obstaculo
