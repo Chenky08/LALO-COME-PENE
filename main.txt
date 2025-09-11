@@ -1,0 +1,84 @@
+#include "pch.h"
+#include "iostream"
+#include "string"
+
+using namespace std;
+using namespace System;
+#include "Tienda.h"
+#include "Cliente.h"
+#include "Pedido.h"
+
+
+
+int main() {
+
+	Tienda* tienda = new Tienda();
+	int opcion = -1;
+
+
+	do {
+		cout << "***MENU***" << endl;
+		cout << "1. Registro de clientes" << endl;
+		cout << "2. Registro de pedidos" << endl;
+		cout << "3. Listar pedidos por DNI" << endl;
+		cout << "4. Listar datos de cliente por DNI" << endl;
+		cout << "Digite una opcion: "; cin >> opcion;
+
+		switch (opcion) {
+		case 1: {
+			string nombre; int dni;
+			cout << "Digite los datos del cliente a registrar: " << endl;
+			cout << "Nombre: "; getline(cin >> ws, nombre);
+			cout << "DNI: "; cin >> dni;
+
+			Cliente* c = new Cliente(nombre, dni);
+			tienda->registrarClientes(c);
+
+			delete c;
+
+			break;
+		}
+		case 2: {
+			int num; string producto; float precio; int cantidad;
+			int dni;
+			cout << "Numero de pedido: "; cin >> num;
+			cout << "Producto: "; getline(cin >> ws, producto);
+			cout << "Precio: "; cin >> precio;
+			cout << "Cantidad: "; cin >> cantidad;
+			cout << "DNI del cliente: "; cin >> dni;
+			
+			Cliente* cTemp = new Cliente(dni);
+
+			Pedido* p = new Pedido(num, producto, precio, cantidad, cTemp);
+
+			tienda->registrarPedidos(p);
+
+			delete p;
+			break;
+		}
+		case 3: {
+			int dni;
+			cout << "DNI del cliente: "; cin >> dni;
+			tienda->ListarPedidosPorcliente(dni);
+			break;
+		}
+		case 4: {
+			int dni;
+			cout << "DNI del cliente: "; cin >> dni;
+			tienda->mostrarDatosClientePorDni(dni);
+			break;
+		}
+		
+		}
+
+		system("pause>0");
+	} while (opcion != 0);
+
+
+
+
+
+
+	delete tienda;
+	return 0;
+}

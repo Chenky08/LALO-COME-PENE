@@ -1,0 +1,104 @@
+#pragma once
+#include "ArregloDinamico.h"
+#include "Cliente.h"
+#include "Pedido.h"
+
+class Tienda
+{
+public:
+	Tienda() {
+	}
+	~Tienda() {
+	}
+
+	void registrarClientes(Cliente* c) {
+		if (c == nullptr)return;
+		if (posicionPorDni(c->getDni()) >= 0) {
+			cout << "Dni del cliente ah registrar ya existe" << endl;
+			return;
+		}
+
+		clientes.push_back(c);
+		cout << "Cliente agregado con exito..." << endl;
+	}
+
+	void registrarPedidos(Pedido* p) {
+		if (p == nullptr)return;
+		Cliente* e = p->getCliente();
+		if (e == nullptr || posicionPorDni(e->getDni())<0) {
+			cout << "Pedido sin cliente" << endl;
+			return;
+		}
+
+		if (posicionPorNumeroProducto(p->getNum()) >= 0) {
+			cout << "Numero del pedido a registrar ya existe" << endl;
+			return;
+		}
+
+		pedidos.push_back(p);
+		cout << "Pedido agregado con exito..." << endl;
+	}
+
+
+	void ListarPedidosPorcliente(int dni) {
+		float monto = 0;
+		int posC = posicionPorDni(dni);
+		if (posC < 0) {
+			cout << "Cliente no existe" << endl;
+			return;
+		}
+		monto = pedidos[posC].getCantidad() * pedidos[posC].getPrecio();
+		cout << "Pedidos del cliente " << clientes[posC].getDni()<<": " << endl;
+		cout << "Numero // Producto // precio // cantidad // monto " << endl;
+		for (int i = 0; i < pedidos.size(); i++) {
+			if (i == posC) {
+				cout << pedidos[posC].getNum() << " // " << pedidos[posC].getProducto() << " // " << pedidos[posC].getPrecio() << " // " << pedidos[posC].getCantidad() <<
+					" // " << monto << endl;
+				i = 0;
+			}
+		}
+	}
+
+	void mostrarDatosClientePorDni(int dni) {
+		int posC = posicionPorDni(dni);
+		if (posC < 0) {
+			cout << "Cliente no existe" << endl;
+			return;
+		}
+
+		cout << "***Datos del cliente***" << endl;
+		cout << "Dni: " << clientes[posC].getDni() << endl;
+		cout << "Nombre: " << clientes[posC].getNombre() << endl;
+
+		cout << "\n";
+	}
+private:
+	ArregloDinamico<Cliente*> clientes;
+	ArregloDinamico<Pedido*>pedidos;
+
+	int posicionPorDni(int dni) {
+		int pos = -1;
+		for (int i = 0; i < clientes.size(); i++) {
+			if (clientes[i].getDni() == dni) {
+				pos = i;
+			}
+			
+		}
+
+		return pos;
+	}
+
+	int posicionPorNumeroProducto(int num){
+		int pos = -1;
+		for (int i = 0; i < pedidos.size(); i++) {
+			if (pedidos[i].getNum() == num) {
+				pos = i;
+			}
+		}
+		return pos;
+	
+	}
+
+};
+
+
