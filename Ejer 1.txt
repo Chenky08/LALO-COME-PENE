@@ -1,0 +1,470 @@
+#pragma once
+#include <iostream>
+using namespace std;
+
+template <typename T>
+class ArregloDinamico {
+    T* arreglo = nullptr;
+    int n = 0;
+    int tam = 0;
+
+    void redimensionar(int nuevoTam) {
+        T* nuevoArr = new T[nuevoTam];
+        for (int i = 0; i < n; ++i) nuevoArr[i] = arreglo[i];
+        delete[] arreglo;
+        arreglo = nuevoArr;
+        tam = nuevoTam;
+    }
+
+public:
+    ArregloDinamico() = default;
+    ~ArregloDinamico() { delete[] arreglo; }
+
+    void agregar(const T& elemento) {
+        if (n >= tam) redimensionar(tam < 2 ? 2 : tam * 2);
+        arreglo[n++] = elemento;
+    }
+
+    void listar() const {
+        for (int i = 0; i < n; ++i) cout << i << ". " << arreglo[i] << "\n";
+    }
+
+    T* buscar(int pos) { return (pos >= 0 && pos < n) ? &arreglo[pos] : nullptr; }
+
+    int buscarPorId(int id) {
+        for (int i = 0; i < n; ++i) if (arreglo[i].getId() == id) return i;
+        return -1;
+    }
+
+    template <typename K>
+    int buscarPorClave(K clave, K(*obtener)(T*)) {
+        for (int i = 0; i < n; ++i) if (obtener(&arreglo[i]) == clave) return i;
+        return -1;
+    }
+
+    int buscarPorPredicado(bool (*pred)(T*)) {
+        for (int i = 0; i < n; ++i) if (pred(&arreglo[i])) return i;
+        return -1;
+    }
+
+    void eliminar(int pos) {
+        if (pos < 0 || pos >= n) return;
+        for (int i = pos; i < n - 1; ++i) arreglo[i] = arreglo[i + 1];
+        --n;
+    }
+
+    void actualizar(int pos, const T& v) { if (pos >= 0 && pos < n) arreglo[pos] = v; }
+
+    int size() const { return n; }
+
+    T& operator[](int idx) { return arreglo[idx]; }
+    const T& operator[](int idx) const { return arreglo[idx]; }
+};
+
+
+#pragma once
+
+class Usuario {
+private:
+	string nombre;
+	int telefono;
+	char sexo;
+	string facultad;
+	long fecha;
+	string email;
+	string redSocial;
+public:
+	Usuario() {
+		this->nombre = "";
+		this->telefono = 0;
+		this->sexo ='n';
+		this->facultad = "";
+		this->fecha =0;
+		this->email = "";
+		this->redSocial ="";
+	}
+	
+	Usuario(string nombre, int telefono, char sexo, string facultad, long fecha, string email, string redSocial) {
+		this->nombre = nombre;
+		this->telefono = telefono;
+		this->sexo = sexo;
+		this->facultad = facultad;
+		this->fecha = fecha;
+		this->email = email;
+		this->redSocial = redSocial;
+	}
+	~Usuario();
+
+	string getNombre() {
+		return nombre;
+	}
+	void setNombre(string nombre) {
+		this->nombre = nombre;
+	}
+
+	int getTelefono() {
+		return telefono;
+	}
+	void setTelefono(int telefono) {
+		this->telefono = telefono;
+	}
+
+	char getSexo() {
+		return sexo;
+	}
+	void setSexo(char sexo) {
+		this->sexo = sexo;
+	}
+
+	string getFacultad() {
+		return facultad;
+	}
+	void setFacultad(string facultad) {
+		this->facultad = facultad;
+	}
+
+	long getFecha() {
+		return fecha;
+	}
+	void setFecha(long fecha) {
+		this->fecha = fecha;
+	}
+
+	string getEmail() {
+		return email;
+	}
+	void setEmail(string email) {
+		this->email = email;
+	}
+
+	string getRedSocial() {
+		return redSocial;
+	}
+	void setRedSocial(string redSocial) {
+		this->redSocial = redSocial;
+	}
+
+	void mostrarInfoContacto() {
+		
+		cout << "Nombre: " << nombre << endl;
+		cout << "telefono: " << telefono << endl;
+		cout << "Sexo: " << sexo << endl;
+		cout << "Facultad: " << facultad << endl;
+		cout << "Fecha de nacimiento: " << fecha << endl;
+		cout << "Email: " << email << endl;
+		cout << "Red social: " << redSocial << endl;
+
+		cout << "\n";
+	}
+
+	int hallarMes() {
+		int mes,residuo;
+		residuo = fecha % 10000;
+		mes = residuo / 100;
+
+		return mes;
+	}
+
+};
+
+
+#pragma once
+#include "string"
+
+#include "Usuario.h"
+#include "ArregloDinamico.h"
+
+
+class Admin
+{
+public:
+
+
+	Admin();
+	~Admin();
+
+
+
+	void registrarContactos(Usuario* u) {
+		if (u == nullptr) return;
+
+		if (posicionPorEmail(u->getEmail()) >= 0) {
+			cout << "El email registrado para este usuario ya existe" << endl;
+			return;
+		}
+		if (posicionPorTelefono(u->getTelefono()) >= 0) {
+			cout << "El telefono registrado para este usuario ya existe" << endl;
+			return;
+		}
+
+		usuarios.agregar(*u);
+		cout << "Contacto agregado con exito..." << endl;
+	}
+
+	void ModificarDatos(string email) {
+		int posContacto = posicionPorEmail(email);
+		if (posContacto < 0) {
+			cout << "Email de este usuario no existe" << endl;
+			return;
+		}
+		int opcion;
+		string nom;
+		int tel;
+		char sex;
+		string facu, eml, red;
+		long fech;
+
+		cout << "Digite que dato desea modificar: " << endl;
+		cout << "1. Nombre" << endl;
+		cout << "2. Telefono" << endl;
+		cout << "3. Sexo" << endl;
+		cout << "4. Facultad" << endl;
+		cout << "5. Fecha de Nacimiento" << endl;
+		cout << "6. Email" << endl;
+		cout << "7. Red Social" << endl;
+		cout << "Digite una opcion: ";cin >> opcion;
+
+		switch (opcion) {
+		case 1:
+			cout << "Digite el nuevo Nombre: ";getline(cin >> ws, nom);
+			usuarios[posContacto].setNombre(nom);
+			cout << "Cambio realizado con exito..." << endl;
+			break;
+		case 2:
+			cout << "Digite el nuevo telefono: ";cin >> tel;
+			if (posicionPorTelefono(usuarios[posContacto].getTelefono()) >= 0) {
+				cout << "Este telefono ya existe" << endl;
+				return;
+			}
+			usuarios[posContacto].setTelefono(tel);
+
+			cout << "Cambio realizado con exito..." << endl;
+			break;
+		case 3:
+			cout << "Digite el nuevo sexo: ";cin >> sex;
+			usuarios[posContacto].setSexo(sex);
+			cout << "Cambio realizado con exito..." << endl;
+			break;
+		case 4:
+			cout << "Digite la nueva facultad: ";getline(cin >> ws, facu);
+			usuarios[posContacto].setFacultad(facu);
+			cout << "Cambio realizado con exito..." << endl;
+			break;
+		case 5:
+			cout << "Digite la nueva fecha de nacimiento (AAAAMMDD): ";cin >> fech;
+			usuarios[posContacto].setFecha(fech);
+			cout << "Cambio realizado con exito..." << endl;
+			break;
+		case 6:
+			cout << "Digite el nuevo email: ";getline(cin >> ws, eml);
+			if (posicionPorEmail(usuarios[posContacto].getEmail()) >= 0) {
+				cout << "Este email ya existe" << endl;
+				return;
+			}
+			usuarios[posContacto].setEmail(eml);
+			cout << "Cambio realizado con exito..." << endl;
+			break;
+		case 7:
+			cout << "Digite la nueva Red Social: ";getline(cin >> ws, red);
+			usuarios[posContacto].setRedSocial(red);
+			cout << "Cambio realizado con exito..." << endl;
+			break;
+		default:
+			cout << "Opcion invalida..." << endl;
+			break;
+		}
+	}
+
+	void EliminarContactosPorEmail(string email) {
+		int posEmail = posicionPorEmail(email);
+		if (posEmail < 0) {
+			cout << "Email de este usuario no existe" << endl;
+			return;
+		}
+
+		usuarios.eliminar(posEmail);
+
+		cout << "Contacto eliminado con exito..." << endl;
+
+	}
+
+	void MostrarInfoPorEmail(string email) {
+		int posEmail = posicionPorEmail(email);
+		if (posEmail < 0) {
+			cout << "Email de este usuario no existe" << endl;
+			return;
+		}
+
+		for (int i = 0;i < usuarios.size();i++) {
+			if (usuarios[i].getEmail() == email) {
+				cout << "Datos de " << email << ": " << endl;
+				usuarios[i].mostrarInfoContacto();
+
+				return;
+			}
+		}
+	}
+
+	void CumpleMayo() {
+		int c = 0;
+		cout << "Contactos con fecha de nacimiento en el mes de mayo:" << endl;
+		for (int i = 0;i > usuarios.size();i++) {
+			if (usuarios[i].hallarMes() == 5) {
+				cout << usuarios[i].getEmail() << " / " << usuarios[i].getFecha() << endl;
+				c++;
+			}
+		}
+	}
+
+	void ContactoVarones() {
+		int c = 0;
+		cout << "Contactos con sexo masculino:" << endl;
+		for (int i = 0;i > usuarios.size();i++) {
+			if (usuarios[i].getSexo() == 'm' || usuarios[i].getSexo() == 'M') {
+				cout << usuarios[i].getEmail() << " / " << usuarios[i].getSexo() << endl;
+				c++;
+			}
+		}
+	}
+
+	void RedFbWts() {
+		int c = 0;
+		cout << "Contactos con red social en Facebook y WhatsApp:" << endl;
+		for (int i = 0;i > usuarios.size();i++) {
+			if (usuarios[i].getRedSocial() == "Facebook" || usuarios[i].getRedSocial() == "WhatsApp") {
+				cout << usuarios[i].getEmail() << " / " << usuarios[i].getRedSocial() << endl;
+				c++;
+			}
+		}
+	}
+	
+
+private:
+
+	ArregloDinamico<Usuario> usuarios;
+
+	int posicionPorEmail(string email) {
+		int pos = -1;
+
+		for (int i = 0;i < usuarios.size();i++) {
+			if (usuarios[i].getEmail() == email) {
+				pos = i;
+			}
+		}
+
+		return pos;
+	}
+
+	int posicionPorTelefono(int telefono) {
+		int pos = -1;
+
+		for (int i = 0;i < usuarios.size();i++) {
+			if (usuarios[i].getTelefono() == telefono) {
+				pos = i;
+			}
+		}
+
+		return pos;
+	}
+
+
+	
+
+
+};
+
+
+#include "pch.h"
+#include "iostream"
+
+using namespace std;
+using namespace System;
+
+#include "Admin.h"
+#include "Usuario.h"
+
+
+
+int main() {
+
+	Admin* admin = new Admin();
+	int opcion = -1;
+
+	
+	do {
+		cout << "***MENU***" << endl;
+		cout << "1. Registro de contactos" << endl;
+		cout << "2. Modifcar un contacto" << endl;
+		cout << "3. Eliminar contactos por email" << endl;
+		cout << "4. Mostrar informacion por email" << endl;
+		cout << "5. Reporte de contactos que cumplen anios en mayo" << endl;
+		cout << "6. Reporte de contactos que son varones" << endl;
+		cout << "7. Reporte de contactos que tienen red social Facebook y WhatsApp" << endl;
+		cout << "Digite una opcion: ";cin >> opcion;
+
+		switch (opcion) {
+		case 1: {
+			string nombre; int telefono; char sexo; string facultad; long fecha; string email; string redSocial;
+			cout << "Digite los datos del contacto a registrar: " << endl;
+			cout << "Nombre"; getline(cin >> ws, nombre);
+			cout << "Telefono";cin >> telefono;
+			cout << "Sexo";cin >> sexo;
+			cout << "Facultad";getline(cin >> ws, facultad);
+			cout << "Fecha de Nacimiento";cin >> fecha;
+			cout << "Email";getline(cin >> ws, email);
+			cout << "Red Social";getline(cin >> ws, redSocial);
+
+			Usuario* u = new Usuario(nombre, telefono, sexo, facultad, fecha, email, redSocial);
+			admin->registrarContactos(u);
+
+			delete u;
+
+			break;
+		}
+		case 2: {
+			string email;
+			cout << "Digite el emial del contacto: ";getline(cin >> ws, email);
+			admin->ModificarDatos(email);
+			break;
+		}
+		case 3: {
+			string email;
+			cout << "Digite el emial del contacto: ";getline(cin >> ws, email);
+			admin->EliminarContactosPorEmail(email);
+			break;
+		}
+		case 4: {
+			string email;
+			cout << "Digite el emial del contacto: ";getline(cin >> ws, email);
+			admin->MostrarInfoPorEmail(email);
+			break;
+		}
+		case 5: {
+			admin->CumpleMayo();
+			break;
+		}
+		case 6: {
+			admin->ContactoVarones();
+			break;
+		}
+		case 7: {
+			admin->RedFbWts();
+			break;
+		}
+		default: {
+			cout << "Opcion invalida" << endl;
+			break;
+		}
+		}
+
+		system("pause>0");
+	} while (opcion != 0);
+
+
+
+
+
+
+	delete admin;
+	return 0;
+}
